@@ -1,12 +1,15 @@
-<html>
+<!DOCTYPE html>
+<html lang ="en">
+  <head>
 <meta name="google-signin-client_id" content="539699277901-99iheradvd3fo53aln49o5j493jahkpi.apps.googleusercontent.com">
+  </head>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
 <a href="#" onclick="signOut();">Sign out</a>
 <script>
   // This function is invoked when sign out button is clicked. It signs out the existing user
   function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
+    let auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
       console.log('User signed out.');
     });
@@ -20,21 +23,21 @@
   default_redirect : The default redirecting link is to table.html
   signup_redirect : This link stores the redirect link to signup page
 */
-var cookie_name = "token"
-var base_deployment_url = window.location.toString().split("/").slice(0,-1).join("/")
-var redirect_uri = base_deployment_url + "/login.html"
-var default_redirect = base_deployment_url + "/apps/table.html"
-var signup_redirect = base_deployment_url + "/apps/signup/signup.html"
+let cookie_name = "token"
+let base_deployment_url = window.location.toString().split("/").slice(0,-1).join("/")
+let redirect_uri = base_deployment_url + "/login.html"
+let default_redirect = base_deployment_url + "/apps/table.html"
+let signup_redirect = base_deployment_url + "/apps/signup/signup.html"
 let state = decodeURIComponent(getUrlParam("state"))
 if (!state || state == "null"){
   state = default_redirect
 }
 // google's certs are here: https://www.googleapis.com/oauth2/v1/certs; remember to replace literal \n with linebreak
 function randomString(length) {
-    var bytes = new Uint8Array(length);
-    var random = window.crypto.getRandomValues(bytes);
-    var result = [];
-    var charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._~'
+    let bytes = new Uint8Array(length);
+    let random = window.crypto.getRandomValues(bytes);
+    let result = [];
+    let charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._~'
     random.forEach(function (c) {
         result.push(charset[c % charset.length]);
     });
@@ -44,7 +47,7 @@ function randomString(length) {
 function getUrlParam(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&#]' + name + '(=([^&#]*)|&|#|$)'),
+    let regex = new RegExp('[?&#]' + name + '(=([^&#]*)|&|#|$)'),
         results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
