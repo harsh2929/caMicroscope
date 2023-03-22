@@ -1,6 +1,49 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
+# name: Node.js CI
+
+# on:
+#   push:
+  
+# jobs:
+#   build:
+  
+#     runs-on: ubuntu-latest
+    
+#     strategy:
+#       matrix:
+#         node-version: [14.x, 16.x, 18.x]
+#         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        
+#     description: >
+#       This workflow installs dependencies, builds the source code, and runs tests on multiple versions of Node.js.
+      
+#     steps:
+#       - uses: actions/checkout@v2
+      
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: ${{ matrix.node-version }}
+          
+#       - run: npm ci
+#       - run: npm install
+#       - run: npm install jsdom
+#       - run: npm install -g http-server
+#       - run: npm install -g mocha
+#       - run: npm install eslint
+#       - run: npm install eslint-config-google
+#       - run: http-server -s &
+#       - run: npm run build --if-present
+#       - run: npm run lint
+#       - run: npm test
+      
+#       # Add a step to stop the http-server
+#       - name: Stop http-server
+#         run: |
+#           lsof -ti tcp:8080 | xargs kill
+
 name: Node.js CI
 
 on: [push]
