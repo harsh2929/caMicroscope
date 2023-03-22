@@ -1,28 +1,31 @@
-// segmentation display supports toggling, deletion, loading, saving
-class segmentationanno{
-  constructor(camic, d, ui, slide, deleteCallback){
-    this.data = []; //internal storage
+class SegmentationAnno {
+  constructor(camic, d, ui, slide, deleteCallback) {
+    this.data = [];
     this.slide = slide;
     this.camic = camic;
     this.ui = ui;
     this.deleteCallback = deleteCallback;
-    // popup panels
+
     this.annotPopup = new PopupPanel({
       footer: [{
-          title: 'Delete',
-          class: 'material-icons',
-          text: 'delete_forever',
-          callback: this.deleteSegment,},],
+        title: 'Delete',
+        class: 'material-icons',
+        text: 'delete_forever',
+        callback: this.deleteSegment,
+      }]
     });
+
     camic.viewer.addHandler('canvas-lay-click', e => {
       if (!e.data) {
         this.annotPopup.close();
-        return;}
-      let data = Array.isArray(e.data) ? e.data[e.data.selected] : e.data;
-      let attributes = data.properties.annotations;
-      attributes.area = `${Math.round(data.geometries.features[data.selected].properties.area,)} μm²`
-      attributes.circumference = `${Math.round(data.geometries.features[data.selected].properties.circumference,)} μm`;
-      let body = convertHumanAnnotationToPopupBody(attributes);
+        return;
+      }
+const data = Array.isArray(e.data) ? e.data[e.data.selected] : e.data;
+      const attributes = data.properties.annotations;
+      attributes.area = `${Math.round(data.geometries.features[data.selected].properties.area)} μm²`;
+      attributes.circumference = `${Math.round(data.geometries.features[data.selected].properties.circumference)} μm`;
+      const body = convertHumanAnnotationToPopupBody(attributes);
+
       this.annotPopup.data = {
         id: data.provenance.analysis.execution_id,
         oid: data._id.$oid,
@@ -36,22 +39,25 @@ class segmentationanno{
       this.annotPopup.open(e.position);
     });
   }
-  saveSegment = (image,data,notes) => {
-    if(!data.features.length) //empty
+
+  saveSegment = (image, data, notes) => {
+    if (!data.features.length || !data.features[0].geometry.coordinates.length) {
       return;
-    if(!data.features[0].geometry.coordinates.length)
-      return;
-    data = ImageFeaturesToVieweportFeatures( // scale
-           this.camic.viewer, data);
-    // Add new lines to notes to prevent overflow
+    }
+
+    data = ImageFeaturesToVieweportFeatures(this.camic.viewer, data);
+
     let str = notes.notes || '';
-    var resultString = '';
-    while (typeof str==='string' && str.length > 0) {
-      resultString += str.substring(0, 36) + '\n';
-      str = str.substring(36);}
+    let resultString = '';
+
+    while (typeof str === 'string' && str.length > 0) {
+      resultString += `${str.substring(0, 36)}\n`;
+      str = str.substring(36);
+    }
+
     notes.notes = resultString;
-    notes.name = "segment_"+notes.name;
-    const execId = notes.name+randomId();
+    notes.name = `segment_${notes.name}`;
+    const execId = `${notes.name}${randomId()}`;
 
     const annotJson = {
       creator: getUserId(),
@@ -67,10 +73,9 @@ class segmentationanno{
         },
       },
       properties: {
-        annotations: notes
+        annotations: notes,
       },
-      geometries:data,
-      // image:image
+      geometries: data,
     };
     this.camic.store
         .addMark(annotJson)
