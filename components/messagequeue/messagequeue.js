@@ -16,141 +16,58 @@
  *        The position of MessageQueue instance shows up. 'top-left', 'top-right', 'bottom-left', 'bottom-right'.
  */
 class MessageQueue {
-  constructor(options) {
-    this.className = 'MessageQueue';
+  constructor({ position = 'top-left', element } = {}) {
+    this.setting = { position };
 
-    this.setting = {
-      position: 'top-left', // top-left top-right bottom-left bottom-right
-    };
-    // user setting
-    if (options&&options.position) this.setting.position = options.position;
-
-    this.elt = document.getElementById(this.setting.id);
-    if (!this.elt && this.setting.element) {
-      this.elt = this.setting.element;
-    }
-
-    //
-    if (!this.elt) {
-      // create main
+    if (element) {
+      this.elt = element;
+    } else {
       this.elt = document.createElement('div');
       document.body.appendChild(this.elt);
     }
+
     this.elt.classList.add('bullet-container');
-    switch (this.setting.position) {
-      case 'top-left':
-        // top-left
-        this.elt.style.top = 0;
-        this.elt.style.left = 0;
-
-        break;
-      case 'top-right':
-        // top-right
-
-        this.elt.style.top = 0;
-        this.elt.style.right = 0;
-        break;
-      case 'bottom-left':
-        // bottom-left
-
-        this.elt.style.bottom = 0;
-        this.elt.style.left = 0;
-        break;
-      case 'bottom-right':
-        // bottom-right
-
-        this.elt.style.bottom = 0;
-        this.elt.style.right = 0;
-        break;
-      default:
-        // statements_def
-        break;
-    }
+    this.elt.style[this.setting.position.includes('top') ? 'top' : 'bottom'] = 0;
+    this.elt.style[this.setting.position.includes('left') ? 'left' : 'right'] = 0;
   }
 
-  /**
-     * add a error message into the queue.
-     * @param {String} text
-     *        the content of the message
-     * @param {Number} [time=5000]
-     *        the time, in milliseconds (thousandths of a second), the timer should delay to destroy this message.
-     */
+  addInfo(text, time = 5000) {
+    this.__add(text, 'info', time);
+  }
+
   addError(text, time = 5000) {
     this.__add(text, 'error', time);
   }
-  /**
-     * add a warning message into the queue.
-     * @param {String} text
-     *        the content of the message
-     * @param {Number} [time=3000]
-     *        the time, in milliseconds (thousandths of a second), the timer should delay to destroy this message.
-     */
+
   addWarning(text, time = 5000) {
     this.__add(text, 'warning', time);
-  }
-
-  /**
-     * add a plain message into the queue.
-     * @param {String} text
-     *        the content of the message
-     * @param {Number} [time=1000]
-     *        the time, in milliseconds (thousandths of a second), the timer should delay to destroy this message.
-     */
-  add(text, time = 5000) {
-    this.__add(text, 'info', time);
   }
 
   addSmall(text, time = 1000) {
     this.__add(text, 'small', time);
   }
-  /**
-     * @private
-     * add the different type of message to the message queue.
-     * @param  {String} text
-     *         the content of the message
-     * @param  {String} [type=info]
-     *         the type of the message. 'info' - information, 'warning' - warning message, 'error' - error message.
-     * @param  {Number} [time=1000]
-     *         the time, in milliseconds (thousandths of a second), the timer should delay to destroy this message.
-     */
-  __add(text, type='info', time = 1000) {
+
+  __add(text, type, time) {
     const div = MessageQueue.createBullet(text, type);
-        this.setting.position.includes('bottom')?
-        this.elt.appendChild(div):this.elt.insertBefore(div, this.elt.firstChild);
-        if (this.setting.position.includes('right')) div.classList.add('right');
+    this.elt.insertBefore(div, this.elt.firstChild);
+    if (this.setting.position.includes('right')) {
+      div.classList.add('right');
+    }
 
-        div.addEventListener('webkitTransitionEnd', this.__destroy.bind(div));
-        div.addEventListener('transitionend', this.__destroy.bind(div));
+    div.addEventListener('transitionend', this.__destroy.bind(div));
 
-        setTimeout(function() {
-          div.classList.add('hide');
-        }, time);
+    setTimeout(() => {
+      div.classList.add('hide');
+    }, time);
   }
-  /**
-     * @private
-     * remove the message from the queue
-     * @param  {Event} e
-     *         Event
-     */
+
   __destroy(e) {
-    if (e.propertyName == 'opacity') {
+    if (e.propertyName === 'opacity') {
       this.parentNode.removeChild(this);
     }
   }
 
-  /**
-     * a static helper that create the message bullet
-     * @param  {String} text
-     *         the content of the message
-     * @param  {Strinf} type
-     *         the type of the message. 'info' - information, 'warning' - warning message, 'error' - error message.
-     * @return {HTMLElement} the div element that represents a message
-     */
   static createBullet(text, type) {
-    const div = document.createElement('div');
-    div.classList.add('bullet');
-    div.classList.add(type);
-    div.innerHTML = text;
-    return div;
+    return `<div class="bullet ${type}">${text}</div>`;
   }
 }
