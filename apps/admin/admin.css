@@ -9,8 +9,8 @@ body {
 }
 
 /*
-   * Sidebar
-   */
+  * Sidebar
+  */
 
 .sidebar {
   position: fixed;
@@ -46,10 +46,11 @@ iframe {
   width: 100%;
   height: 100%;
 }
+
 .sidebar .nav-link {
   font-weight: 500;
-  color: #5c5c5c;
 }
+
 .sidebar .nav-link.active {
   font-weight: bold;
 }
@@ -57,9 +58,9 @@ iframe {
 #sidebarMenu.sidebar .nav-link div.title {
   margin: 0 0.5rem;
 }
+
 .sidebar .nav-link .feather {
   margin-right: 4px;
-  color: #727272;
 }
 
 .sidebar .nav-link.active {
@@ -77,8 +78,8 @@ iframe {
 }
 
 /*
-   * Navbar
-   */
+  * Navbar
+  */
 
 .navbar-brand {
   padding-top: 0.75rem;
@@ -100,7 +101,6 @@ iframe {
 }
 
 .form-control-dark {
-  color: #fff;
   background-color: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.1);
 }
@@ -120,9 +120,11 @@ iframe {
   font-weight: bold;
   margin-left: 3rem;
 }
+
 .nav-link {
   cursor: pointer;
 }
-.nav-link:hover{
- background-color: #dfdfdf;
+
+.nav-link:hover {
+  background-color: #dfdfdf;
 }
